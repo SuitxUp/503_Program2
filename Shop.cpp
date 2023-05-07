@@ -10,6 +10,15 @@ void Shop::init()
    pthread_cond_init(&cond_barber_sleeping_, NULL);
 }
 
+Shop::~Shop()
+{
+   pthread_mutex_destroy(&mutex_);
+   pthread_cond_destroy(&cond_customers_waiting_);
+   pthread_cond_destroy(&cond_customer_served_);
+   pthread_cond_destroy(&cond_barber_paid_);
+   pthread_cond_destroy(&cond_barber_sleeping_);
+}
+
 string Shop::int2string(int i)
 {
    stringstream out;
@@ -98,7 +107,7 @@ void Shop::helloCustomer(int id)
        pthread_cond_wait(&cond_barber_sleeping_, &mutex_);
    }
 
-   print(barber_id_ * -1, "starts a hair-cut service for " + int2string( customer_in_chair_ ) );
+   print(barber_id_ * -1, "starts a hair-cut service for customer[" + int2string( customer_in_chair_ ) + "]");
    pthread_mutex_unlock( &mutex_ );
 }
 
@@ -108,7 +117,8 @@ void Shop::byeCustomer(int barber_id)
 
   // Hair Cut-Service is done so signal customer and wait for payment
   in_service_ = false;
-  print(barber_id * -1, "says he's done with a hair-cut service for " + int2string(customer_in_chair_));
+  print(barber_id * -1, "says he's done with a hair-cut service for customer[" 
+  + int2string(customer_in_chair_) + "]");
   money_paid_ = false;
   pthread_cond_signal(&cond_customer_served_);
   while (money_paid_ == false)
