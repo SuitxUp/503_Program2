@@ -53,7 +53,7 @@ class Shop
       pthread_cond_t cond_customer_served_;
       pthread_cond_t cond_barber_paid_;
       pthread_cond_t cond_barber_sleeping_;
-      int barber_id; // the id of the barber thread
+      int barber_id_; // the id of the barber thread
 
       void init();
       string int2string(int i);
