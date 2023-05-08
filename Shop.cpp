@@ -60,7 +60,7 @@ int Shop::visitShop(int id)
    pthread_mutex_lock(&mutex_);
    
    // If all chairs are full then leave shop
-   if (waiting_chairs_.size() == max_waiting_cust_) 
+   if (waiting_chairs_.size() == max_waiting_cust_)
    {
       print( id,"leaves the shop because of no available waiting chairs.");
       ++cust_drops_;
