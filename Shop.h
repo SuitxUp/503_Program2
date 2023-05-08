@@ -19,16 +19,14 @@ class Shop
    public:
 
       Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs :
-      kDefaultNumChairs), customer_in_chair_(0), in_service_(false), money_paid_(false),
-       cust_drops_(0)
+      kDefaultNumChairs), cust_drops_(0)
       {
-         init();
+         init(num_barbers);
       };
 
-      Shop() : max_waiting_cust_(kDefaultNumChairs), customer_in_chair_(0),
-      in_service_(false), money_paid_(false), cust_drops_(0)
+      Shop() : max_waiting_cust_(kDefaultNumChairs), cust_drops_(0)
       {
-         init();
+         init(1);
       };
       
       ~Shop();
@@ -41,23 +39,24 @@ class Shop
 
    private:
 
+      int* customer_in_chair_;
+      bool* in_service_;
+      bool* money_paid_;
+      queue<int> barbers;
       const int max_waiting_cust_; // the max number of threads that can wait
-      int customer_in_chair_;
-      bool in_service_;
-      bool money_paid_;
       queue<int> waiting_chairs_; // includes the ids of all waiting threads
       int cust_drops_;
+      int num_barbers_;
       
       // Mutexes and condition variables to coordinate threads
       // mutex_ is used in conjuction with all conditional variables
       pthread_mutex_t mutex_;
       pthread_cond_t cond_customers_waiting_;
       pthread_cond_t cond_customer_served_;
-      pthread_cond_t cond_barber_paid_;
-      pthread_cond_t cond_barber_sleeping_;
-      int barber_id_; // the id of the barber thread
+      pthread_cond_t* cond_barber_paid_;
+      pthread_cond_t* cond_barber_sleeping_;
 
-      void init();
+      void init(int num_barber);
       string int2string(int i);
       void print(int person, string message);
 };

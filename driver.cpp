@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
    // Wait for customers to finish and cancel barber
    for (int i = 0; i < num_customers; i++)
    {
-       pthread_join(customer_threads[i], NULL);
+      pthread_join(customer_threads[i], NULL);
    }
 
    for(int i = 0; i < num_barbers; i++) {
